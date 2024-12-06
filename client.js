@@ -1,4 +1,4 @@
-function calculateDigest(body) {
+function calculateDigest(body) { 
     const encoder = new TextEncoder();
     const data = encoder.encode(body);
     return crypto.subtle.digest('SHA-256', data).then(hashBuffer => {
@@ -22,6 +22,18 @@ function signData(data, privateKeyPem) {
     });
 }
 
+// Funzione per leggere la chiave privata da un file caricato
+function readPrivateKeyFromFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            resolve(event.target.result); // Contenuto del file .pem come stringa
+        };
+        reader.onerror = reject;
+        reader.readAsText(file); // Leggi il file come testo
+    });
+}
+
 // Funzione per inviare la richiesta al server
 function sendRequest() {
     const url = 'https://secure-service-1-0.onrender.com';
@@ -39,29 +51,35 @@ function sendRequest() {
     calculateDigest(bodyString).then(digest => {
         headers['Digest'] = digest;
 
-        const clientPrivateKeyPem = `-----BEGIN PRIVATE KEY-----
-        MIIB...YOUR_PRIVATE_KEY_CONTENT_HERE...
-        -----END PRIVATE KEY-----`; // Inserisci il contenuto della tua chiave privata
+        // Leggi la chiave privata dal file caricato
+        const privateKeyFile = document.getElementById('privateKeyFile').files[0];
+        if (privateKeyFile) {
+            readPrivateKeyFromFile(privateKeyFile).then(clientPrivateKeyPem => {
+                const authorizationHeader = `Signature keyId="client1",algorithm="rsa-sha256",signature=""`;
 
-        const authorizationHeader = `Signature keyId="client1",algorithm="rsa-sha256",signature=""`;
+                signData(digest, clientPrivateKeyPem).then(signature => {
+                    headers['Authorization'] = `Signature keyId="client1",algorithm="rsa-sha256",signature="${signature}",headers="digest"`;
 
-        signData(digest, clientPrivateKeyPem).then(signature => {
-            headers['Authorization'] = `Signature keyId="client1",algorithm="rsa-sha256",signature="${signature}",headers="digest"`;
-
-            fetch(url, {
-                method: 'POST',
-                headers: headers,
-                body: bodyString
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('response-body').textContent = JSON.stringify(data, null, 2);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('response-body').textContent = 'Errore nella richiesta.';
+                    fetch(url, {
+                        method: 'POST',
+                        headers: headers,
+                        body: bodyString
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('response-body').textContent = JSON.stringify(data, null, 2);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('response-body').textContent = 'Errore nella richiesta.';
+                    });
+                });
+            }).catch(error => {
+                console.error('Error reading private key file:', error);
             });
-        });
+        } else {
+            console.error('No private key file selected');
+        }
     });
 }
 
