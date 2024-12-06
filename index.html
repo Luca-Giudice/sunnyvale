@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Client</title>
+</head>
+
+<body>
+    <h1>Autenticazione API con HTTP Signature</h1>
+
+    <form id="api-form">
+        <label for="code">Codice Tentativo:</label>
+        <input type="text" id="code" name="code" required value="RGSHWSdC/e0LgKf5"><br><br>
+
+        <label for="author">Nome e Cognome:</label>
+        <input type="text" id="author" name="author" required value="Tuo Nome Cognome"><br><br>
+
+        <button type="submit">Invia richiesta</button>
+    </form>
+
+    <div id="response">
+        <h2>Risposta del server:</h2>
+        <pre id="response-body"></pre>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html> 
