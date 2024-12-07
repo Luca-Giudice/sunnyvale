@@ -27,10 +27,10 @@ function readPrivateKeyFromFile(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = function(event) {
-            resolve(event.target.result); // Contenuto del file .pem come stringa
+            resolve(event.target.result);
         };
         reader.onerror = reject;
-        reader.readAsText(file); // Leggi il file come testo
+        reader.readAsText(file);
     });
 }
 
