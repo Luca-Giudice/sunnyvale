@@ -22,7 +22,7 @@ function signData(data, privateKeyPem) {
     });
 }
 
-// Funzione per leggere la chiave privata da un file caricato
+// Funzione per leggere la chiave privata
 function readPrivateKeyFromFile(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -51,7 +51,7 @@ function sendRequest() {
     calculateDigest(bodyString).then(digest => {
         headers['Digest'] = digest;
 
-        // Leggi la chiave privata dal file caricato
+        // Leggi la chiave privata
         const privateKeyFile = document.getElementById('privateKeyFile').files[0];
         if (privateKeyFile) {
             readPrivateKeyFromFile(privateKeyFile).then(clientPrivateKeyPem => {
