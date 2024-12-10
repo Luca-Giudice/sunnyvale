@@ -4,32 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Client</title>
+    <title>HTTP Signature Client</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>Autenticazione API con HTTP Signature</h1>
+    <h1>Client HTTP Signature Authentication</h1>
+    <form id="authForm" action="client.php" method="POST">
+        <label for="attemptCode">Codice tentativo:</label>
+        <input type="text" id="attemptCode" name="attemptCode" required><br><br>
 
-    <form id="api-form">
-        <label for="code">Codice Tentativo:</label>
-        <input type="text" id="code" name="code" required value="RGSHWSdC/e0LgKf5"><br><br>
-    
-        <label for="author">Nome e Cognome:</label>
-        <input type="text" id="author" name="author" required value="Tuo Nome Cognome"><br><br>
-    
-        <label for="privateKeyFile">Carica Chiave Privata:</label>
-        <input type="file" id="privateKeyFile" accept=".pem"><br><br>
-    
+        <label for="authorName">Nome e cognome:</label>
+        <input type="text" id="authorName" name="authorName" required><br><br>
+
         <button type="submit">Invia richiesta</button>
     </form>
 
+    <div id="response"></div>
 
-    <div id="response">
-        <h2>Risposta del server:</h2>
-        <pre id="response-body"></pre>
-    </div>
-
-    <script src="client.js"></script>
+    <script src="script.js"></script>
 </body>
 
-</html> 
+</html>
